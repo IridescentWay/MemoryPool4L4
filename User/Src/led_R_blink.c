@@ -1,6 +1,7 @@
 #include "ucos_ii.h"
 #include "stm32l4xx_hal.h"
 #include "LED.h"
+#include "lz4.h"
 
 void task_led_R_blink(void *p_arg) {
     while (1) {

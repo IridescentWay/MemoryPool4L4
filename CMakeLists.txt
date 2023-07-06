@@ -55,16 +55,17 @@ include_directories(
         Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
         Drivers/CMSIS/Device/ST/STM32L4xx/Include
         Drivers/CMSIS/Include
+        Lib
         BSP/OSPort
-        BSP/Inc
         UCOSII/Config
         UCOSII/Source
+        BSP/Inc
         User/Inc
 )
 
 add_definitions(-DDEBUG -DUSE_HAL_DRIVER -DSTM32L496xx)
 
-file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "BSP/*.*" "UCOSII/*.*" "User/*.*")
+file(GLOB_RECURSE SOURCES "Core/*.*" "Drivers/*.*" "BSP/*.*" "UCOSII/*.*" "User/*.*" "Lib/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32L496VETX_FLASH.ld)
 

@@ -165,7 +165,9 @@ void  OSInitHookBegin (void)
 #if OS_CPU_HOOKS_EN > 0u
 void  OSInitHookEnd (void)
 {
-
+#if OS_APP_HOOKS_EN > 0u
+    App_OSInitHook();
+#endif
 }
 #endif
 

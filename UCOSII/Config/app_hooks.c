@@ -30,7 +30,7 @@
 */
 
 #include  <os.h>
-#include "pthread.h"
+#include "mmu.h"
 
 /*
 *********************************************************************************************************
@@ -91,6 +91,11 @@
 */
 
 #if (OS_APP_HOOKS_EN > 0)
+
+void App_OSInitHook (void)
+{
+    memoryPoolInit();
+}
 
 /*
 *********************************************************************************************************
@@ -228,6 +233,9 @@ void  App_TaskSwHook (void)
 void  App_TCBInitHook (OS_TCB *ptcb)
 {
     (void)ptcb;
+    pageTbl[ptcb->OSTCBPrio].item_index = 0u;
+    OS_MemClr((INT8U *)pageTbl[ptcb->OSTCBPrio].table, sizeof(pageTbl[ptcb->OSTCBPrio].table));
+    ptcb->OSTCBExtPtr = &pageTbl[ptcb->OSTCBPrio];
 }
 #endif
 

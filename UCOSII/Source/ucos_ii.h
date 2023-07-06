@@ -1426,6 +1426,7 @@ void          OSTimeTickHook          (void);
 */
 
 #if OS_APP_HOOKS_EN > 0u
+void          App_OSInitHook          (void);
 void          App_TaskCreateHook      (OS_TCB          *ptcb);
 void          App_TaskDelHook         (OS_TCB          *ptcb);
 void          App_TaskIdleHook        (void);
