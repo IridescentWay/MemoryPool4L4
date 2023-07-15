@@ -3,8 +3,9 @@
 #include "LED.h"
 #include "tasks.h"
 #include "ucos_ii.h"
+#include "usart.h"
 
-static OS_STK task_led_R_stk[128];
+static OS_STK task_led_R_stk[256];
 
 void SysTick_init(void)
 {
@@ -14,7 +15,8 @@ void SysTick_init(void)
 void user_entry() {
     SysTick_init();
     LED_Init();
+    DEBUG_USART_CONFIG_INIT();
     OSInit();
-    OSTaskCreate(task_led_R_blink, (void *) 0, &task_led_R_stk[127], 6);
+    OSTaskCreate(task_led_R_blink, (void *) 0, &task_led_R_stk[255], 6);
     OSStart();
 }
