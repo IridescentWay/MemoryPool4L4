@@ -4,18 +4,20 @@
 
 #include <malloc.h>
 #include <sys/unistd.h>
+#include <string.h>
 
 #include "mmu.h"
 #include "ucos_ii.h"
+#include "lz4.h"
 
 vpage_t pageTbls[OS_LOWEST_PRIO + 1][PG_TBL_SIZE];
 
-physical_memory_t *pagePool;
+physical_memory_t *pagePool = (physical_memory_t*)0x2f2f2f2f;
 
 size_t vread(void* vaddr, void* buf, size_t size) {
     unsigned int vpg_no = (unsigned int) vaddr >> ADDRESS_SHIFT;
     unsigned int pg_offset = (unsigned int) vaddr & PG_OFFSET_MASK;
-    page_table_t task_page_tbl = (page_table_t) (page_table_t *) pageTbls[OSPrioCur];
+    page_table_t task_page_tbl = (page_table_t) pageTbls[OSPrioCur];
     if (task_page_tbl[vpg_no].allocated == 0) {
         // 读未写入内容的地址返回-1
         return -1;
@@ -24,11 +26,13 @@ size_t vread(void* vaddr, void* buf, size_t size) {
     void* paddr = (void *) ((ppg_no << ADDRESS_SHIFT) + pg_offset);
     // 读出压缩过的内容
     // 解压缩恢复出来
-    char* const cmpBuf = malloc(LZ4_COMPRESSBOUND(size));
-    LZ4_decompress_safe(paddr,cmpBuf,size,size);
-    //需要将解压完的数据从cmpBuf中复制到buf中
-    
-    free(cmpBuf);//解压完成释放缓存空间
+    int ssize = LZ4_COMPRESSBOUND(size);
+    int ret = LZ4_decompress_safe(paddr,buf,size,ssize);
+
+    if (ret < 0) {
+        printf("decompress error!");
+        return ret;
+    }
     // 返回
     return size;
 }
@@ -46,13 +50,17 @@ size_t vwrite(void* vaddr, void* buf, size_t size) {
     unsigned int ppg_no = task_page_tbl[vpg_no].ppg_no;
     void* paddr = (void *) ((ppg_no << ADDRESS_SHIFT) + pg_offset);
     // 压缩
-    char* const cmpBuf = malloc(LZ4_COMPRESSBOUND(size));
-    LZ4_compress_default(buf,cmpBuf,size,size);
-    
+    int ssize = LZ4_COMPRESSBOUND(size);
+    char* const cmpBuf = malloc(ssize);
+    int ret = LZ4_compress_default(buf,cmpBuf,size,ssize);
+    if (ret == 0) {
+        printf("compress error!");
+        return 0;
+    }
     //至此buf中的原始数据压缩至cmpBuf
-
+    printf("size of str after compressed: %d\n", ret);
     // 写入
-
+    memcpy(paddr, cmpBuf, ret);
     free(cmpBuf);//写入完成释放缓存空间
     return size;
 }

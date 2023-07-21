@@ -5,6 +5,6 @@
 #ifndef MEMORYPOOL4L4_TASKS_H
 #define MEMORYPOOL4L4_TASKS_H
 
-void task_led_R_blink(void *p_arg);
+void compressTest(void *p_arg);
 
 #endif //MEMORYPOOL4L4_TASKS_H

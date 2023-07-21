@@ -11,7 +11,7 @@
 #define PG_OFFSET_MASK 0x1ffu
 #define ADDRESS_SHIFT 9u
 #define PG_TBL_SIZE 64u
-#define PG_POOL_SIZE 64u
+#define PG_POOL_SIZE 32u
 
 typedef struct ppage {
     void* page_start;

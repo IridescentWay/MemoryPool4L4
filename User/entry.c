@@ -17,6 +17,6 @@ void user_entry() {
     LED_Init();
     DEBUG_USART_CONFIG_INIT();
     OSInit();
-    OSTaskCreate(task_led_R_blink, (void *) 0, &task_led_R_stk[255], 6);
+    OSTaskCreate(compressTest, (void *) 0, &task_led_R_stk[255], 6);
     OSStart();
 }

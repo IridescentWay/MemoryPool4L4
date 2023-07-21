@@ -42,7 +42,7 @@
  * in memory stack (0:default, fastest), or in memory heap (1:requires malloc()).
  */
 #ifndef LZ4_HEAPMODE
-#  define LZ4_HEAPMODE 0
+#  define LZ4_HEAPMODE 1
 #endif
 
 /*
@@ -300,7 +300,8 @@ static int LZ4_isAligned(const void* ptr, size_t alignment)
 #include <limits.h>
 #if defined(__cplusplus) || (defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901L) /* C99 */)
 # include <stdint.h>
-  typedef  uint8_t BYTE;
+
+typedef  uint8_t BYTE;
   typedef uint16_t U16;
   typedef uint32_t U32;
   typedef  int32_t S32;
